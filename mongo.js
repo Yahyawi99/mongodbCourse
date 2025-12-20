@@ -97,3 +97,42 @@ db.products.find({
     ],
   },
 });
+
+let merry = {
+  name: "Merry Smith",
+  age: 25,
+  skills: [
+    { name: "developer", level: 7 },
+    { name: "tester", level: 5 },
+  ],
+  hobbies: ["music", "cooking"],
+};
+
+db.employees.find({
+  skills: {
+    $elemMatch: {
+      name: "tester",
+      level: { $gte: 3 },
+    },
+  },
+});
+
+db.employees.find(
+  {},
+  {
+    _id: 0,
+    name: 1,
+    "skills.name": 1,
+  }
+);
+
+db.products.find(
+  { ratings: { $gte: 8 } },
+  {
+    _id: 0,
+    name: 1,
+    price: 1,
+    ratings: 1,
+    category: { $elemMatch: { $eq: "laptop" } },
+  }
+);
