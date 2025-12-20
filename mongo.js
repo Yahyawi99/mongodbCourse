@@ -133,6 +133,16 @@ db.products.find(
     name: 1,
     price: 1,
     ratings: 1,
-    category: { $elemMatch: { $eq: "laptop" } },
+    category: { $elemMatch: { $eq: ["electronics", "laptop", "mobile"] } },
+  }
+);
+
+db.products.find(
+  {},
+  {
+    _id: 0,
+    name: 1,
+    price: 1,
+    category: { $slice: [1, 1] },
   }
 );
