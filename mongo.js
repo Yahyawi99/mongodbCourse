@@ -216,3 +216,53 @@ db.employees.aggregate([
   { $match: { gender: "male" } },
   { $group: { _id: { country: "$address.country" }, total: { $sum: 1 } } },
 ]);
+
+// Aggregation ($sort)
+db.employees.aggregate([
+  { $match: { gender: "male" } },
+  { $group: { _id: { country: "$address.country" }, total: { $sum: 1 } } },
+  { $sort: { total: 1 } },
+]);
+
+db.employees.aggregate([
+  {
+    $project: {
+      _id: 0,
+      firstname: 1,
+      gender: 1,
+      email: 1,
+    },
+  },
+]);
+
+// Aggregation ($project)
+db.employees.aggregate([
+  {
+    $project: {
+      _id: 0,
+      email: 1,
+      gender: 1,
+      name: {
+        $concat: [
+          { $toUpper: { $substrCP: ["$firstname", 0, 1] } },
+          {
+            $substrCP: [
+              "$firstname",
+              1,
+              { $subtract: [{ $strLenCP: "$firstname" }, 1] },
+            ],
+          },
+          " ",
+          { $toUpper: { $substrCP: ["$lastname", 0, 1] } },
+          {
+            $substrCP: [
+              "$lastname",
+              1,
+              { $subtract: [{ $strLenCP: "$lastname" }, 1] },
+            ],
+          },
+        ],
+      },
+    },
+  },
+]);
