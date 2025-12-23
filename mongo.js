@@ -170,3 +170,20 @@ db.employees.updateMany(
   { $set: { "skills.$[el].expert": true } },
   { arrayFilters: [{ "el.level": { $gte: 6 } }] }
 );
+
+// Array manipulation
+db.employees.updateOne(
+  { name: "Steve Smith" },
+  {
+    $push: {
+      skills: {
+        $each: [
+          { name: "JAVA", level: 1 },
+          { name: "JAVA", level: 8 },
+        ],
+        $sort: { level: 1 },
+        $slice: 1,
+      },
+    },
+  }
+);
