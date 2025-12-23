@@ -200,3 +200,19 @@ db.employees.updateOne(
   { name: "Steve Smith" },
   { $pull: { skills: { name: "JAVA" } } }
 );
+
+// Aggregation ($match)
+db.employees
+  .aggregate([
+    { $match: { gender: "male" } },
+    { $match: { "address.country": "usa" } },
+  ])
+  .forEach((e) => {
+    console.log(e.firstname + " is from " + e.address.country);
+  });
+
+// Aggregation ($group)
+db.employees.aggregate([
+  { $match: { gender: "male" } },
+  { $group: { _id: { country: "$address.country" }, total: { $sum: 1 } } },
+]);
