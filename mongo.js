@@ -152,8 +152,21 @@ db.employees.find({
   skills: { $elemMatch: { name: "developer", level: { $gt: 6 } } },
 });
 
-// elementMatch : update specific element in an array
+// elementMatch : update specific element in an array (first match)
 db.employees.updateMany(
   { skills: { $elemMatch: { name: "developer", level: { $gte: 6 } } } },
   { $set: { "skills.$.expert": true } }
+);
+
+//  update specific element in an array (all elements)
+db.employees.updateMany(
+  { skills: { $exists: true } },
+  { $inc: { "skills.$[].level": -1 } }
+);
+
+// update specific elements in an array (all matching elements)
+db.employees.updateMany(
+  { "skills.level": { $gte: 6 } },
+  { $set: { "skills.$[el].expert": true } },
+  { arrayFilters: [{ "el.level": { $gte: 6 } }] }
 );
