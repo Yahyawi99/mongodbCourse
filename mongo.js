@@ -146,3 +146,7 @@ db.products.find(
     category: { $slice: [1, 1] },
   }
 );
+
+db.employees.find({
+  skills: { $elemMatch: { name: "developer", level: { $gt: 6 } } },
+});
