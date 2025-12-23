@@ -171,7 +171,7 @@ db.employees.updateMany(
   { arrayFilters: [{ "el.level": { $gte: 6 } }] }
 );
 
-// Array manipulation
+// Array manipulation ( allow duplicates)
 db.employees.updateOne(
   { name: "Steve Smith" },
   {
@@ -186,4 +186,17 @@ db.employees.updateOne(
       },
     },
   }
+);
+
+// Array manipulation ( doesn't allow duplicates)
+db.employees.updateOne(
+  { name: "Steve Smith" },
+  { $addToSet: { skills: { name: "JAVA", level: 2 } } }
+);
+
+// Array manipulation (deletion)
+db.employees.updateOne({ name: "Steve Smith" }, { $pop: { skills: -1 } });
+db.employees.updateOne(
+  { name: "Steve Smith" },
+  { $pull: { skills: { name: "JAVA" } } }
 );
