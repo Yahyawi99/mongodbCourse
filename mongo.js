@@ -147,6 +147,13 @@ db.products.find(
   }
 );
 
+//
 db.employees.find({
   skills: { $elemMatch: { name: "developer", level: { $gt: 6 } } },
 });
+
+// elementMatch : update specific element in an array
+db.employees.updateMany(
+  { skills: { $elemMatch: { name: "developer", level: { $gte: 6 } } } },
+  { $set: { "skills.$.expert": true } }
+);
