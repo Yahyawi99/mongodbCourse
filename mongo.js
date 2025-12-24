@@ -266,3 +266,35 @@ db.employees.aggregate([
     },
   },
 ]);
+
+// Transforming data
+db.employees.aggregate([
+  {
+    $project: {
+      _id: 0,
+      firstname: 1,
+      email: 1,
+      location: {
+        type: "point",
+        coordinates: [
+          {
+            $convert: {
+              input: "$address.location.coordinates.long",
+              to: "double",
+              onError: 0.0,
+              onNull: 0.0,
+            },
+          },
+          {
+            $convert: {
+              input: "$address.location.coordinates.lat",
+              to: "double",
+              onError: 0.0,
+              onNull: 0.0,
+            },
+          },
+        ],
+      },
+    },
+  },
+]);
