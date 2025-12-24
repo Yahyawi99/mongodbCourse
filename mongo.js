@@ -449,3 +449,15 @@ db.employees.aggregate([
     $count: "total",
   },
 ]);
+
+// User management
+db.createUser({
+  user: "mark",
+  pwd: "123",
+  roles: [
+    {
+      role: "readWrite",
+      db: "eShopping",
+    },
+  ],
+});
