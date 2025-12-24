@@ -351,10 +351,37 @@ db.employees.aggregate([
   },
 ]);
 
+// Arrays
 db.employees.aggregate({
   $project: {
     _id: 1,
     firstname: 1,
-    skillsCount: { $size: "$skills" },
+    skills: {
+      $filter: {
+        input: "$skills",
+        as: "el",
+        cond: {
+          $gte: ["$$el.level", 8],
+        },
+      },
+    },
   },
 });
+
+// $skip and $limit
+db.employees.aggregate([
+  {
+    $project: {
+      _id: 0,
+      firstname: 1,
+      birthDate: {
+        $toDate: "$dob",
+      },
+    },
+  },
+  {
+    $sort: { birthDate: 1 },
+  },
+  { $skip: 10 },
+  { $limit: 10 },
+]);
