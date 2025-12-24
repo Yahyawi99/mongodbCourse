@@ -382,6 +382,70 @@ db.employees.aggregate([
   {
     $sort: { birthDate: 1 },
   },
+  { $limit: 10 },
+  { $out: "olderPeople" },
+]);
+
+// Writing Pipeline Result into a Collection ($out)
+db.employees.aggregate([
+  {
+    $project: {
+      _id: 0,
+      firstname: 1,
+      birthDate: {
+        $toDate: "$dob",
+      },
+    },
+  },
+  {
+    $sort: { birthDate: 1 },
+  },
   { $skip: 10 },
   { $limit: 10 },
+  { $out: "olderPeople" },
+]);
+
+// $lookup
+db.users.aggregate([
+  {
+    $lookup: {
+      from: "orders",
+      localField: "_id",
+      foreignField: "user_id",
+      as: "orders",
+    },
+  },
+  { $unwind: "$orders" },
+  {
+    $lookup: {
+      from: "products",
+      localField: "orders.product_id",
+      foreignField: "_id",
+      as: "products",
+    },
+  },
+  { $unwind: "$products" },
+  {
+    $project: {
+      _id: 0,
+      name: 1,
+      email: 1,
+      orderId: "$orders._id",
+      orderDate: "$orders.order_date",
+      productId: "$products._id",
+      productName: "$products.name",
+    },
+  },
+]);
+
+// $count
+db.employees.aggregate([
+  {
+    $group: {
+      _id: "$address.country",
+    },
+  },
+  {
+    $count: "total",
+  },
 ]);
