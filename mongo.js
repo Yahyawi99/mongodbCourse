@@ -298,3 +298,63 @@ db.employees.aggregate([
     },
   },
 ]);
+
+db.employees.aggregate([
+  {
+    $project: {
+      _id: 1,
+      firstname: 1,
+      email: 1,
+      dateOfBirth: { $toDate: "$dob" },
+    },
+  },
+]);
+
+db.employees.aggregate([
+  {
+    $project: {
+      _id: 1,
+      firstname: 1,
+      email: 1,
+      dateOfBirth: { $toDate: "$dob" },
+    },
+  },
+  { $group: { _id: { $isoWeekYear: "$dateOfBirth" }, count: { $sum: 1 } } },
+  {
+    $project: {
+      _id: 0,
+      yearOfBirth: "$_id",
+      count: 1,
+    },
+  },
+  { $sort: { count: -1 } },
+]);
+
+db.employees.aggregate([
+  {
+    $project: {
+      _id: 0,
+      firstname: 1,
+      country: "$address.country",
+      hobbies: 1,
+    },
+  },
+  {
+    $unwind: "$hobbies",
+  },
+  {
+    $group: {
+      _id: "$country",
+      allHobbies: { $addToSet: "$hobbies" },
+      count: { $sum: 1 },
+    },
+  },
+]);
+
+db.employees.aggregate({
+  $project: {
+    _id: 1,
+    firstname: 1,
+    skillsCount: { $size: "$skills" },
+  },
+});
