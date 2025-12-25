@@ -454,10 +454,32 @@ db.employees.aggregate([
 db.createUser({
   user: "mark",
   pwd: "123",
+  roles: ["NoDelete"],
+});
+
+db.updateUser("john", {
   roles: [
     {
       role: "readWrite",
       db: "eShopping",
     },
+    {
+      role: "readWrite",
+      db: "sample",
+    },
   ],
+});
+
+db.createRole({
+  role: "NoDelete",
+  privileges: [
+    {
+      resource: {
+        db: "eShopping",
+        collection: "",
+      },
+      actions: ["find", "insert", "update"],
+    },
+  ],
+  roles: [],
 });
