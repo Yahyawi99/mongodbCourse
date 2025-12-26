@@ -1,6 +1,9 @@
 // KMeans : it uses only encludien distance (problem)
 // le choix initial de k (problem)
 
+// mongoimport -d NY -c resto --drop --file "pathToFile"
+// mongod --replSet RS1 --port 27017 --dbpath C:\data\db
+
 // question 5
 db.resto.find(
   {
